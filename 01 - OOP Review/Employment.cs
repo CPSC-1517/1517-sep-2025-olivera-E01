@@ -18,6 +18,13 @@ namespace ObjectOrientedReview
             get => _Years;
             set { _Years = value; }
         }
-        
+
+        public Employment()
+        // "no-argument constructor"
+        {
+            // initialise all properties to some default values
+            Title = "Unknown";
+            Years = 0.0;
+        }
     }
 }
