@@ -1,3 +1,5 @@
+using System.Reflection.Metadata.Ecma335;
+
 namespace ObjectOrientedReview
 {
     public class Employment
@@ -6,7 +8,7 @@ namespace ObjectOrientedReview
 
         public string Title
         {
-            get { return _Title; }
+            get => _Title;           // same as get { return _Title; }
             set { _Title = value; }
         }
         
