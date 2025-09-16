@@ -2,10 +2,12 @@ namespace ObjectOrientedReview
 {
     public class Employment
     {
+        private string _Title;
+
         public string Title
         {
-            get { return Title; }
-            set { Title = value; }
+            get { return _Title; }
+            set { _Title = value; }
         }
         
     }
