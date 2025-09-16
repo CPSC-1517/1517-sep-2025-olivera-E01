@@ -34,5 +34,11 @@ namespace ObjectOrientedReview
             Title = title;
             Years = years;
         }
+
+        public override string ToString()
+        {
+            // $"static text {someVariable}" -> string interpolation
+            return $"Title: {Title}, Years: {Years}";
+        }
     }
 }
