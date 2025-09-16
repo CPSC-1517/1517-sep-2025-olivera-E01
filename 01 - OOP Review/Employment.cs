@@ -2,6 +2,11 @@ namespace ObjectOrientedReview
 {
     public class Employment
     {
-        public string Title { get; set; } // automatic implementation
+        public string Title
+        {
+            get { return Title; }
+            set { Title = value; }
+        }
+        
     }
 }
