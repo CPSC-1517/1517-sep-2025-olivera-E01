@@ -5,11 +5,18 @@ namespace ObjectOrientedReview
     public class Employment
     {
         private string _Title;
+        private double _Years;
 
         public string Title
         {
-            get => _Title;           // same as get { return _Title; }
+            get => _Title;
             set { _Title = value; }
+        }
+
+        public double Years
+        {
+            get => _Years;
+            set { _Years = value; }
         }
         
     }
