@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 
 namespace ObjectOrientedReview
@@ -25,6 +26,13 @@ namespace ObjectOrientedReview
             // initialise all properties to some default values
             Title = "Unknown";
             Years = 0.0;
+        }
+
+        public Employment(string title, double years)
+        // greedy constructor: creating a new instance with all properties defined
+        {
+            Title = title;
+            Years = years;
         }
     }
 }
