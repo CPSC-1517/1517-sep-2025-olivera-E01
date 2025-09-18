@@ -24,7 +24,14 @@ namespace ObjectOrientedReview
         public double Years
         {
             get => _Years;
-            set { _Years = value; }
+            set
+            {
+                // we need Years value to >= 0
+                if (!Utilities.IsZeroOrPositive(value))  // !true == false
+                {
+                    throw ArgumentOutOfRangeException("Years must be 0:", nameof(Years));
+                }
+            }
         }
 
         // private setter to protect invariant value; change via methods/constructors if needed
