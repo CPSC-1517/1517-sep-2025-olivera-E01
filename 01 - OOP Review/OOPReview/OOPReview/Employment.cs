@@ -20,19 +20,23 @@ namespace ObjectOrientedReview
             set { _Years = value; }
         }
 
+        // private setter to protect invariant value; change via methods/constructors if needed
+        public DateTime StartDate { get; private set; } = DateTime.Now; 
         public Employment()
-        // "no-argument constructor"
+        // default a.k.a. "no-argument" constructor
         {
             // initialise all properties to some default values
             Title = "Unknown";
             Years = 0.0;
+            StartDate = DateTime.Today;
         }
 
-        public Employment(string title, double years)
+        public Employment(string title, double years, DateTime startDate)
         // greedy constructor: creating a new instance with all properties defined
         {
             Title = title;
             Years = years;
+            StartDate = startDate;  // even though its setter is private, value is assignable here
         }
 
         public override string ToString()
