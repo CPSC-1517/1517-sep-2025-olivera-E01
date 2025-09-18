@@ -29,8 +29,9 @@ namespace ObjectOrientedReview
                 // we need Years value to >= 0
                 if (!Utilities.IsZeroOrPositive(value))  // !true == false
                 {
-                    throw ArgumentOutOfRangeException("Years must be 0:", nameof(Years));
+                    throw new ArgumentOutOfRangeException("Years must be 0:", nameof(Years));
                 }
+                _Years = value;
             }
         }
 
@@ -61,7 +62,7 @@ namespace ObjectOrientedReview
         public override string ToString()
         {
             // $"static text {someVariable}" -> string interpolation
-            return $"Title: {Title}, Years: {Years}, StartDate: {StartDate.ToString("yyyy-MM-dd"), Level: {Level}}";
+            return $"Title: {Title}, Years: {Years}, StartDate: {StartDate.ToString("yyyy-MM-dd")}, Level: {Level}";
         }
     }
 }
