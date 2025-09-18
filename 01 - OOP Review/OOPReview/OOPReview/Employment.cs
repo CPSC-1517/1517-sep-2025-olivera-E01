@@ -21,7 +21,10 @@ namespace ObjectOrientedReview
         }
 
         // private setter to protect invariant value; change via methods/constructors if needed
-        public DateTime StartDate { get; private set; } = DateTime.Now; 
+        public DateTime StartDate { get; private set; } = DateTime.Now;
+
+        public SupervisoryLevel Level { get; set; } = SupervisoryLevel.Entry;
+
         public Employment()
         // default a.k.a. "no-argument" constructor
         {
@@ -29,20 +32,22 @@ namespace ObjectOrientedReview
             Title = "Unknown";
             Years = 0.0;
             StartDate = DateTime.Today;
+            Level = SupervisoryLevel.TeamMember;
         }
 
-        public Employment(string title, double years, DateTime startDate)
+        public Employment(string title, double years, DateTime startDate, SupervisoryLevel level)
         // greedy constructor: creating a new instance with all properties defined
         {
             Title = title;
             Years = years;
             StartDate = startDate;  // even though its setter is private, value is assignable here
+            Level = level;
         }
 
         public override string ToString()
         {
             // $"static text {someVariable}" -> string interpolation
-            return $"Title: {Title}, Years: {Years}";
+            return $"Title: {Title}, Years: {Years}, StartDate: {StartDate.ToString("yyyy-MM-dd"), Level: {Level}}";
         }
     }
 }
