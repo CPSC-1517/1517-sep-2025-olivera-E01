@@ -11,7 +11,14 @@ namespace ObjectOrientedReview
         public string Title
         {
             get => _Title;
-            set { _Title = value; }
+            set {
+                // validate: job title must not be empty
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Title cannot be empty", nameof(Title));
+                }
+                _Title = value;
+            }
         }
 
         public double Years
