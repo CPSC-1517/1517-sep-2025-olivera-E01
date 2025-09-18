@@ -5,7 +5,7 @@ namespace ObjectOrientedReview
 {
     public class Employment
     {
-        private string _Title;
+        private string _Title = "";
         private double _Years;
 
         public string Title
