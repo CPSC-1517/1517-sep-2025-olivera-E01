@@ -45,6 +45,8 @@ namespace HiringHelper
                 //}
                 //_employeeId = value.Trim();
 
+                // for practice/reference/validation with regex: https://regex101.com/
+
                 // Modifed code to use helper methods from Utitilies class
                 _employeeId = Utilities.RequirePattern(
                     value,
