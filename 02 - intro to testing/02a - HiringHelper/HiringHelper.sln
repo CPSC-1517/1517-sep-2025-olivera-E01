@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiringHelper.ConsoleApp", "HiringHelper.ConsoleApp\HiringHelper.ConsoleApp.csproj", "{A1714CC3-704D-4A3A-B8D2-86A1FE2ABEBA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiringHelper.Tests", "HiringHelper.Tests\HiringHelper.Tests.csproj", "{478BB62D-072D-4D3F-A77E-9C3C2B628D62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A1714CC3-704D-4A3A-B8D2-86A1FE2ABEBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1714CC3-704D-4A3A-B8D2-86A1FE2ABEBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1714CC3-704D-4A3A-B8D2-86A1FE2ABEBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{478BB62D-072D-4D3F-A77E-9C3C2B628D62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{478BB62D-072D-4D3F-A77E-9C3C2B628D62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{478BB62D-072D-4D3F-A77E-9C3C2B628D62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{478BB62D-072D-4D3F-A77E-9C3C2B628D62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
