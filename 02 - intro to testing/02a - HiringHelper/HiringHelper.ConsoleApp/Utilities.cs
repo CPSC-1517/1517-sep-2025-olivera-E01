@@ -8,7 +8,7 @@ namespace HiringHelper
         // If value is null/blank: throw ArgumentException(message). Return trimmed value otherwise.
         public static string RequireNotBlank(string? value, string message)
         {
-            if (string.IsNullOrEmpty(value))
+            if (string.IsNullOrWhiteSpace(value)) // corrected from string.IsNullOrBlank
             {
                 throw new ArgumentException(message);
             }
