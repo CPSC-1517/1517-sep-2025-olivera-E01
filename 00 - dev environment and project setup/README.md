@@ -46,14 +46,14 @@ Click each heading to expand!
 - To add a reference, [right-click](./.images/C05_multiple-projects.png) *the project you want to add the reference* **to**, and select **Add > Project Reference**. 
   - It's a huge menu! **Add** is near the middle.
   - You **need** to hit the [checkbox](./.images/C06_multiple-projects.png) for all projects you want to add references for.
-- And, [voila](./.images/C08_multiple-projects.png)!
+- And, [voila](./.images/C07_multiple-projects.png)!
 - If you are **only** creating class libraries & tests, that's all you need to do.
 - If you are **also** creating a program that will use/run your class libraries, you need to set it as the startup project:
   - [right click the program's project](./.images/C08_multiple-projects.png)  and **Set as Startup Project**.
   - The startup project's name will be **bolded**. Now you can build the project & run the program!
     - Why? The `dotnet` runtime is concerned with what it actually needs to *run* -- class libraries are definitions we write, not programs we run. 
 
-  - OK, let's try running our application now. [Hell yea!](./.images/C08_multiple-projects.png)
+  - OK, let's try running our application now. [Hell yea!](./.images/C09_multiple-projects.png)
 - To make another project for **tests**, you would do the same steps as above; just change the project type to a C# `xUnit` project.
     - In this example, I called mine `MyExampleApp.Tests`.
     - You don't need to make a test project the startup project.
