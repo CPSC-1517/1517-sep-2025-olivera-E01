@@ -53,13 +53,11 @@
         // default constructor
         public Employment()
         {
-
             Title = "Unknown";
             Level = SupervisoryLevel.TeamMember;
             StartDate = DateTime.Today;
 
             Years = 0.0;
-
         }
 
 
