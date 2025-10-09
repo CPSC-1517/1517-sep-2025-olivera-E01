@@ -1,23 +1,55 @@
-﻿namespace LibraryBooks.ClassLibrary
+﻿using System.Runtime.CompilerServices;
+
+namespace LibraryBooks.ClassLibrary
 {
     /// <summary>
     /// Data class for a single book, with state validation & control over data mutation. 
     /// </summary>
     public class Book
     {
-        // Design spec (fulfill these requirements):
+        private const int MIN_PAGES = 10;
 
-        //   - should have the following data fields:
-        //       - minimum # of pages (expressed as a private constant)
-        //       - ISBN (cannot be null/blank)
-        //       - book title (cannot be null/blank)
-        //       - author name (cannot be null/blank)
-        //       - # of pages (must be at least minimum # of pages)
+        private string _isbn   = 
+        private string _title  =
+        private string _author =
+        private int    _pages;
+
+        public string ISBN
+        {
+
+        }
+
+        public string Title
+        {
+
+        }
+
+        public string Author
+        {
+
+        }
+
+        public int Pages
+        {
+
+        }
+
+        public Book (string isbn, string title, string author, int pages)
+        {
+
+        }
+
+        public void ChangeTitle() { }
+
+        public void ChangePages() { }
+
+        public override string ToString()
+        {
+
+        }
+
 
         //   - should have the following behaviour:
         //       - no data fields above should be externally mutable (modifiable)
-        //       - a public method ChangeTitle that exposes/allows changing the book's title
-        //       - a public method ChangePages that exposes/allows changing the book's page count
-        //       - an overriden ToString method that displays ISBN, title, author, # pages
     }
 }
