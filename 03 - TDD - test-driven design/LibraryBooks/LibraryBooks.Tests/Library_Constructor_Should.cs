@@ -5,7 +5,6 @@
         [Fact]
         public void Constructor_OnlyRequiredFields_Succeeds()
         {
-
         }
 
         [Fact]

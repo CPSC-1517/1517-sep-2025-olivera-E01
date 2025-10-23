@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryBooksWithLinq", "LibraryBooksWithLinq\LibraryBooksWithLinq.csproj", "{0B8EE995-0943-432F-BB38-211FC7DFCC68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryBooksWithLinq.Tests", "LibraryBooksWithLinq.Tests\LibraryBooksWithLinq.Tests.csproj", "{F39E72CD-27A7-47E0-B3A0-8DB8217A490F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B8EE995-0943-432F-BB38-211FC7DFCC68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B8EE995-0943-432F-BB38-211FC7DFCC68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B8EE995-0943-432F-BB38-211FC7DFCC68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B8EE995-0943-432F-BB38-211FC7DFCC68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F39E72CD-27A7-47E0-B3A0-8DB8217A490F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F39E72CD-27A7-47E0-B3A0-8DB8217A490F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F39E72CD-27A7-47E0-B3A0-8DB8217A490F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F39E72CD-27A7-47E0-B3A0-8DB8217A490F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

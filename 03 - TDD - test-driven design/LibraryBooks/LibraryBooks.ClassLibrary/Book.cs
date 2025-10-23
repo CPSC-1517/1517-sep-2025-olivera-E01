@@ -81,7 +81,7 @@ namespace LibraryBooks.ClassLibrary
             }
         }
 
-        public Book (string isbn, string title, string author, int pages)
+        public Book(string isbn, string title, string author, int pages)
         {
             ISBN = isbn;
             Title = title;
