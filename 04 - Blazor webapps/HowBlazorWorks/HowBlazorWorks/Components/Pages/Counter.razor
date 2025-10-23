@@ -1,14 +1,20 @@
-﻿@page "/counter"
+﻿
+@* 1. routing & Blazor-level 'metadata' *@
+@page "/counter"
 @rendermode InteractiveServer
 
+@* 2. page-level / Razor 'metadata' for the browser *@
 <PageTitle>Counter</PageTitle>
 
+@* 3. page contents that we will render for the user*@
 <h1>Counter</h1>
 
+@* Any valid object in the code section can be referenced in "HTML" here (that's Razor at work!)*@
 <p role="status">Current count: @currentCount</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
+@* 4. some C# code!!! *@
 @code {
     private int currentCount = 0;
 
