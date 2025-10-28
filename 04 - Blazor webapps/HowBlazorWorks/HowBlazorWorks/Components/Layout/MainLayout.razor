@@ -1,15 +1,19 @@
 ﻿@inherits LayoutComponentBase
 
+@* area 1: sidebar *@
 <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
 
+@* area 2: main page area*@
     <main>
+        @* sub-area 2a: top bar *@
         <div class="top-row px-4">
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
 
+        @* sub-area 2b: some page component/content*@
         <article class="content px-4">
             @Body
         </article>
