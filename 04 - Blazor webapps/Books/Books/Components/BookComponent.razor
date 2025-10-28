@@ -5,10 +5,17 @@
 @* 2. body content of page/component *@
 <h3>Books</h3>
 
-@foreach (var book in Books)
-{
-    <p>@book.Title</p>
-}
+<table class="table">
+    <thead>
+        <tr><th>Title</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Books)
+        {
+            <tr><td>@book.Title</td></tr>
+        }
+    </tbody>
+</table>
 
 
 @* 3. C# code for this component *@
