@@ -7,12 +7,18 @@
 
 <table class="table">
     <thead>
-        <tr><th>Title</th></tr>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+        </tr>
     </thead>
     <tbody>
         @foreach (var book in Books)
         {
-            <tr><td>@book.Title</td></tr>
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+            </tr>
         }
     </tbody>
 </table>
@@ -24,12 +30,13 @@
     public class Book
     {
         public string Title { get; set; } = "";
+        public string Author { get; set; } = "";
     }
 
     private List<Book> Books = new()
     {
-        new Book { Title = "A Game of Thrones" },
-        new Book { Title = "The Count of Monte Cristo" },
+        new Book { Title = "A Game of Thrones", Author = "George R. R. Martin" },
+        new Book { Title = "The Count of Monte Cristo", Author = "Alexandre Dumas" },
         new Book { Title = "The Dictionary" }
     };
 
