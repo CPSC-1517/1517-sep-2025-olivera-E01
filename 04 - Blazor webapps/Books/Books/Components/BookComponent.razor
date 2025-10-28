@@ -1,5 +1,29 @@
-﻿<h3>Books</h3>
+﻿@* 1. URL routing for this component *@
+@page "/books"
 
+
+@* 2. body content of page/component *@
+<h3>Books</h3>
+
+@foreach (var book in Books)
+{
+    <p>@book.Title</p>
+}
+
+
+@* 3. C# code for this component *@
 @code {
+
+    public class Book
+    {
+        public string Title { get; set; } = "";
+    }
+
+    private List<Book> Books = new()
+    {
+        new Book { Title = "A Game of Thrones" },
+        new Book { Title = "The Count of Monte Cristo" },
+        new Book { Title = "The Dictionary" }
+    };
 
 }
