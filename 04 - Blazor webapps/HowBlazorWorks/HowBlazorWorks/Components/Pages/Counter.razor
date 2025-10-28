@@ -18,8 +18,12 @@
 @code {
     private int currentCount = 0;
 
+    @* create a new usable parameter for the increment count, defaulting to 1 *@
+    [Parameter]
+    public int IncrementAmount { get; set; } = 1;
+
     private void IncrementCount()
     {
-        currentCount++;
+        currentCount += IncrementAmount;
     }
 }
