@@ -8,6 +8,13 @@
 @* EditForm is a built-in component: see EditForm @ https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.forms *@
     <EditForm Model="@book" OnValidSubmit="@AddBook"> 
 
+    @* we bind between form input field & instance property *@
+    @* using the @bind-Value prop on an input formfield component *@
+    <div>
+        <label>Title:</label>
+        <InputText @bind-Value="book.Title" />
+    </div>
+
     <button type="submit">Add Book</button>
 
 </EditForm>
