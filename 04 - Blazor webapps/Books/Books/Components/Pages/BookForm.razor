@@ -1,0 +1,21 @@
+﻿@* 1. routing, imports & metadata *@
+@page "/books/form"
+@using Models
+
+<h3>BookForm</h3>
+
+
+@code {
+
+    // I'm going to be using these for the form - populating the book instance with form data, and adding it to the list
+    private Book book = new();                   // starter empty Book instance, will be used to submit form data for a book
+    private List<Book> books = new List<Book>(); // starter empty book list, will be used to render a table of books
+
+    private void AddBook()  // this method will be used to submit form data & add a book to the list
+    {
+        books.Add(book);
+        book = new();    // after submitting the form (i.e. firing this method),
+                         // we reset book to an empty instance so that the form data clears
+    }
+
+}
