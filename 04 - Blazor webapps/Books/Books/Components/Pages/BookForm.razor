@@ -11,11 +11,13 @@
     @* we bind between form input field & instance property *@
     @* using the @bind-Value prop on an input formfield component *@
     <div>
-        <label>Title:</label>
-        <InputText @bind-Value="book.Title" />
+        <label for="title" class="form-label">Title:</label>
+        <InputText id="title" class="form-control" @bind-Value="book.Title" />
     </div>
 
-    <button type="submit">Add Book</button>
+    <div>
+        <button class="btn btn-primary" type="submit">Add Book</button>
+    </div>
 
 </EditForm>
 
