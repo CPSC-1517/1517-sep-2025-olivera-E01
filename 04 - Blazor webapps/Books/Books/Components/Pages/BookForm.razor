@@ -16,6 +16,33 @@
     </div>
 
     <div>
+        <label for="pages" class="form-label">Pages:</label>
+        <InputNumber id="pages" class="form-control" @bind-Value="book.Pages" />
+    </div>
+
+    <div>
+        <label for="publishdate" class="form-label">Publish Date:</label>
+        <InputDate id="publishdate" class="form-control" @bind-Value="book.PublishDate" />
+    </div>
+
+    <div>
+        <label for="genre" class="form-label">Genre:</label>
+        <InputSelect id="genre" class="form-control" @bind-Value="book.Genre">
+            <option>Manga</option>
+            <option>Fiction</option>
+            <option>Non-Fiction</option>
+            <option>Sports</option>
+        </InputSelect>
+    </div>
+
+    <div>
+        <label>
+            <InputCheckbox id="instock" class="form-control" @bind-Value="book.InStock" />
+            In Stock
+        </label>
+    </div>
+
+    <div>
         <button class="btn btn-primary" type="submit">Add Book</button>
     </div>
 
