@@ -37,7 +37,10 @@
 
     <div>
         <label>
-            <InputCheckbox id="instock" class="form-control" @bind-Value="book.InStock" />
+            @* we'll need slightly different bootstrap classes for checkboxes:
+                https://getbootstrap.com/docs/5.0/forms/checks-radios/
+            *@
+            <InputCheckbox id="instock" class="form-check-input" @bind-Value="book.InStock" />
             In Stock
         </label>
     </div>
