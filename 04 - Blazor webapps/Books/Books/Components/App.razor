@@ -10,11 +10,26 @@
     <link rel="stylesheet" href="@Assets["Books.styles.css"]" />
     <ImportMap />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <HeadOutlet />
+    @* for our development environment, we'll use the 
+        InteractiveServer rendering mode so our components
+        post data and update in real time.
+        
+        This can also be set when we create the Blazor project
+        in the first place (and should have been!), but this way
+        we can demonstrate the different types of client-server interaction --
+        before this commit, posting the form would not work.
+
+        Under the hood, it uses something called SignalR (*basically*
+        websockets + events + long polling, but with a Microsofty name)
+        to do client-server communication and update components 
+        without reloading the page.
+
+    *@
+    <HeadOutlet @rendermode="InteractiveServer" />
 </head>
 
 <body>
-    <Routes />
+    <Routes @rendermode="InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
 </body>
 
