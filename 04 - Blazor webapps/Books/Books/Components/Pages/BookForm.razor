@@ -48,6 +48,48 @@
 
 </EditForm>
 
+<hr />
+
+
+@* now, I'm going to display the books I'm adding in a table *@
+@* first, we'll have default behaviour if there's nothing there yet *@
+@if (books.Count == 0)
+{
+    <p>No books added yet.</p>
+}
+
+else
+{
+    <table class="table table-striped">
+
+        <thead>
+            <th>Title</th>
+            <th>Pages</th>
+            <th>Publish Date</th>
+            <th>Genre</th>
+            <th>In Stock</th>
+        </thead>
+
+        <tbody>
+            @foreach (var someBook in books)
+            {
+                <tr>
+                    <td>@someBook.Title</td>
+                    <td>@someBook.Pages</td>
+                    <td>@someBook.PublishDate</td>
+                    <td>@someBook.Genre</td>
+                    @* You can also do inline expressions to render 
+                       UI values depending on data values, e.g. yes/no instead of True/False
+                        -> here, a ternary statement instead of an if-else block
+                              condition ? codeIfTrue : codeIfFalse
+                    *@
+                    <td>@(someBook.InStock ? "yes" : "no")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
 
 @* 3. behavioural code *@
 @code {
