@@ -25,4 +25,7 @@ The templating language used as an intermediary to translate C# objects and logi
 
 A web framework for the .NET runtime -- almost like a "modernised" way of working in ASP .NET Core, but with the workflow cleanliness and consision of modern JS-based web frameworks like React, Vue, Angular.
 
+A more legible overview of Blazor basics than the official Microsoft documentation can be found at [Blazor University](https://blazor-university.com/).
+
+
   
