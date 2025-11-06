@@ -14,6 +14,7 @@
 
     <DataAnnotationsValidator />  @* <-- we get validation behaviour by calling this component! *@
     <p>Option 1: Collect all errors in the same place with a ValidationSummary component</p>
+    <p>(form validation errors will show here)</p>
     <ValidationSummary />
 
     <p>Option 2: Display each error message under its relevant field using ValidationMessage component</p>
@@ -54,6 +55,13 @@
     <div>
         <button class="btn btn-primary" type="submit">Add Book</button>
     </div>
+
+    @if (feedbackMessage is not null)
+    {
+        <div class="alert alert-info">
+            @feedbackMessage
+        </div>
+    }
 
 </EditForm>
 
@@ -99,9 +107,12 @@ else
     private Book book = new();
     private List<Book> books = new List<Book>();
 
+    private string? feedbackMessage;
+
     private void AddBook()
     {
         books.Add(book);
+        feedbackMessage = $"Successfully added {book.Title} to table.";
         book = new();
     }
 
