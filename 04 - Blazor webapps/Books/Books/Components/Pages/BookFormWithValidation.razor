@@ -8,17 +8,25 @@
 @* EditForm is a built-in component: see EditForm @ https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.forms *@
 <EditForm Model="@book" OnValidSubmit="@AddBook">
 
+    @* for an actually legible reference doc for component-based ASP.NET/blazor validation,
+        see: https://blazor-university.com/forms/validation/
+    *@
+
     <DataAnnotationsValidator />  @* <-- we get validation behaviour by calling this component! *@
+    <p>Option 1: Collect all errors in the same place with a ValidationSummary component</p>
     <ValidationSummary />
 
+    <p>Option 2: Display each error message under its relevant field using ValidationMessage component</p>
     <div>
         <label for="title" class="form-label">Title:</label>
         <InputText id="title" class="form-control" @bind-Value="book.Title" />
+        <ValidationMessage For="() => book.Title" />
     </div>
 
     <div>
         <label for="pages" class="form-label">Pages:</label>
         <InputNumber id="pages" class="form-control" @bind-Value="book.Pages" />
+        <ValidationMessage For="() => book.Pages" />
     </div>
 
     <div>
@@ -94,7 +102,7 @@ else
     private void AddBook()
     {
         books.Add(book);
-        book = new(); 
+        book = new();
     }
 
 }

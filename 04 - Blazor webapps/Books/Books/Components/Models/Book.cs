@@ -7,12 +7,16 @@ using System.ComponentModel.DataAnnotations;
 //    and attach them to a property by calling any in this list ^
 //    without the "Attribute" part at the end
 
+// remember, if you add new validators, you have to stop & recompile/relaunch, not just hot-reload
+
 namespace Books.Models
 {
     public class Book
     {
         [Required]  // <-- here's the validator, attached to Title; we're using RequiredAttribute
         public string? Title { get; set; }
+
+        [Range(2, Int32.MaxValue, ErrorMessage = "Must have at least 2 pages.")]
         public int Pages { get; set; }
         public DateOnly PublishDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public string Genre { get; set; } = "Fiction";
