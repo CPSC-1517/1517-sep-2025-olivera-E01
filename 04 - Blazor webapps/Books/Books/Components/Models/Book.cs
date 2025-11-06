@@ -26,7 +26,7 @@ namespace Books.Models
         // so, let's make a specific method
         public string ToCsv()
         {
-            return $"{Title},{Pages},{PublishDate},{Genre},{InStock}";
+            return $"{Title},{Pages},{PublishDate},{Genre},{InStock}\n";
         }
     }
 }

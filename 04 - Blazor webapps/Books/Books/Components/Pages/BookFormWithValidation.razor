@@ -111,8 +111,11 @@ else
 
     private void AddBook()
     {
+        string csvPath = Path.Combine(Environment.CurrentDirectory + @"\Data", "books.csv");  // build OS path to Data/books.csv
+        File.AppendAllText(csvPath, book.ToCsv());  // *append* the book instance to CSV -- appending means adding to, *not* overwriting, file contents
+
         books.Add(book);
-        feedbackMessage = $"Successfully added {book.Title} to table.";
+        feedbackMessage = $"Successfully saved {book.Title} to: \n{csvPath}.";
         book = new();
     }
 
