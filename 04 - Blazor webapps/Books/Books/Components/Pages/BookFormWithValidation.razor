@@ -9,6 +9,7 @@
 <EditForm Model="@book" OnValidSubmit="@AddBook">
 
     <DataAnnotationsValidator />  @* <-- we get validation behaviour by calling this component! *@
+    <ValidationSummary />
 
     <div>
         <label for="title" class="form-label">Title:</label>
