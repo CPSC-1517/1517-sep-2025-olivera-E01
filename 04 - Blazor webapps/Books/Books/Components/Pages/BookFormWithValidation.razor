@@ -1,0 +1,97 @@
+﻿@* 1. routing, imports & metadata *@
+@page "/books/form-with-validation"
+@using Models
+
+@* 2. front-end rendering template *@
+<h3>Book Form w/ Validation</h3>
+
+@* EditForm is a built-in component: see EditForm @ https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.forms *@
+<EditForm Model="@book" OnValidSubmit="@AddBook">
+
+    <div>
+        <label for="title" class="form-label">Title:</label>
+        <InputText id="title" class="form-control" @bind-Value="book.Title" />
+    </div>
+
+    <div>
+        <label for="pages" class="form-label">Pages:</label>
+        <InputNumber id="pages" class="form-control" @bind-Value="book.Pages" />
+    </div>
+
+    <div>
+        <label for="publishdate" class="form-label">Publish Date:</label>
+        <InputDate id="publishdate" class="form-control" @bind-Value="book.PublishDate" />
+    </div>
+
+    <div>
+        <label for="genre" class="form-label">Genre:</label>
+        <InputSelect id="genre" class="form-control" @bind-Value="book.Genre">
+            <option>Manga</option>
+            <option>Fiction</option>
+            <option>Non-Fiction</option>
+            <option>Sports</option>
+        </InputSelect>
+    </div>
+
+    <div>
+        <label>
+            <InputCheckbox id="instock" class="form-check-input" @bind-Value="book.InStock" />
+            In Stock
+        </label>
+    </div>
+
+    <div>
+        <button class="btn btn-primary" type="submit">Add Book</button>
+    </div>
+
+</EditForm>
+
+<hr />
+
+
+@if (books.Count == 0)
+{
+    <p>No books added yet.</p>
+}
+
+else
+{
+    <table class="table table-striped">
+
+        <thead>
+        <th>Title</th>
+        <th>Pages</th>
+        <th>Publish Date</th>
+        <th>Genre</th>
+        <th>In Stock</th>
+        </thead>
+
+        <tbody>
+            @foreach (var someBook in books)
+            {
+                <tr>
+                    <td>@someBook.Title</td>
+                    <td>@someBook.Pages</td>
+                    <td>@someBook.PublishDate</td>
+                    <td>@someBook.Genre</td>
+                    <td>@(someBook.InStock ? "yes" : "no")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@* 3. behavioural code *@
+@code {
+
+    private Book book = new();
+    private List<Book> books = new List<Book>();
+
+    private void AddBook()
+    {
+        books.Add(book);
+        book = new(); 
+    }
+
+}
