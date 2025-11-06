@@ -21,5 +21,12 @@ namespace Books.Models
         public DateOnly PublishDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public string Genre { get; set; } = "Fiction";
         public bool InStock { get; set; }
+
+        // if we override the .ToString() method, that also changes how the instance is rendered out as text in all generic cases
+        // so, let's make a specific method
+        public string ToCsv()
+        {
+            return $"{Title},{Pages},{PublishDate},{Genre},{InStock}";
+        }
     }
 }
