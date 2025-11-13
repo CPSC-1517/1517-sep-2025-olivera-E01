@@ -8,6 +8,18 @@
 <h3>Book List</h3>
 
 @* 1. section to display error messages *@
+@if (errorMessages.Count > 0)
+{
+    <div class="alert alert-danger">
+        <p>Please fix the following errors:</p>
+        <ul>
+            @foreach(string message in errorMessages)
+            {
+                <li>@message</li>
+            }
+        </ul>
+    </div>
+}
 
 @* 2. table that renders CSV contents into table rows *@
 
