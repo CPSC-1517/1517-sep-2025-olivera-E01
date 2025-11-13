@@ -54,6 +54,7 @@ else
 }
 
 
+
 @* 3. logic to facilitate loading & rendering CSV contents into table *@
 @code {
 
@@ -68,10 +69,14 @@ else
     protected override void OnInitialized()
     {
         @* specify the CSV file path *@
+        string dataDir = Path.Combine(WebHostEnvironment.ContentRootPath, "Data");
+        string csvPath = Path.Combine(dataDir, "books.csv");
 
         @* parse CSV lines into a string (will need a new method on datamodel class) *@
-    
+        string[] lines = File.ReadAllLines(csvPath);
+
             @* within that, do some manual validation / error message display *@
+
     }
 
 
