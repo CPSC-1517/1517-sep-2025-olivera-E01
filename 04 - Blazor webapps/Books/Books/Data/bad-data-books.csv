@@ -1,7 +1,6 @@
 Blazor for CPSC1517,2,10/1/2026,Fiction,False
 Naval Histories of the 19th Century,20,10/17/2025,Non-Fiction,False
 Naval Histories of the 18th Century,3,10/10/2025,Bad Genre,True
+Missing Params,Fiction,False
 Title 4,2,1/19/2025,Fiction,False
-Blazor WebApp 1,10,10/1/2025,0,false
-Blazor WebApp 2,20,10/2/2025,1,true
-Blazor WebApp 3,30,10/3/2025,2,false
+

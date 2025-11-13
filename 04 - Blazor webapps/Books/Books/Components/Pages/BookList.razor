@@ -88,11 +88,22 @@ else
                     BookWithoutDataAnnotations currentBook = BookWithoutDataAnnotations.ParseFromCsv(currentLine);
                     books.Add(currentBook);
                 }
+                @* within that, do some manual validation / error message display *@
+                catch(ArgumentNullException ex)
+                {
+                    errorMessages.Add("File data error");
+                }
+                catch(FormatException ex)
+                {
+                    errorMessages.Add($"Record format error: {currentLine}");
+                }
                 catch(Exception ex)
                 {
-                    
+                    // if there's any unhandled exception we haven't accounted for,
+                    // let's decide to still not crash the application, but just suggest
+                    // something else went wrong
+                    errorMessages.Add($"System Error; {currentLine}");
                 }
-                @* within that, do some manual validation / error message display *@
 
             }
 
