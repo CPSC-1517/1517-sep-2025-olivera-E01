@@ -85,7 +85,7 @@ else
             {
                 try
                 {
-                    BookWithoutDataAnnotations currentBook = new(); // !!! <-- we're going to need some sort of way of parsing the CSV line and instantiating a book instance !!!
+                    BookWithoutDataAnnotations currentBook = BookWithoutDataAnnotations.ParseFromCsv(currentLine);
                     books.Add(currentBook);
                 }
                 catch(Exception ex)
