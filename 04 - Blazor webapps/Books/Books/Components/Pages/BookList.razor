@@ -22,6 +22,36 @@
 }
 
 @* 2. table that renders CSV contents into table rows *@
+@if (books is not null && books.Count > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Pages</th>
+                <th>Publish Date</th>
+                <th>Genre</th>
+                <th>In Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var currentBook in books)
+            {
+                <tr>
+                    <td>@currentBook.Title</td>
+                    <td>@currentBook.Pages</td>
+                    <td>@currentBook.PublishDate</td>
+                    <td>@currentBook.Genre</td>
+                    <td>@currentBook.InStock</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">There are no books in the library.</div>
+}
 
 
 @* 3. logic to facilitate loading & rendering CSV contents into table *@
