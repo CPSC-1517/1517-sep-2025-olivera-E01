@@ -16,9 +16,23 @@
 @code {
 
     @* 3.a) starter instances *@
+    private List<BookWithoutDataAnnotations>? books;
+    private List<string> errorMessages = new();
+    private string? feedbackMessage;
 
     @* 3.b) override our OnInitialized method to load CSV contents
             and do some basic error handling
     *@
+    protected override void OnInitialized()
+    {
+        @* specify the CSV file path *@
+
+        @* parse CSV lines into a string (will need a new method on datamodel class) *@
+    
+            @* within that, do some manual validation / error message display *@
+    }
+
+
+
 
 }
