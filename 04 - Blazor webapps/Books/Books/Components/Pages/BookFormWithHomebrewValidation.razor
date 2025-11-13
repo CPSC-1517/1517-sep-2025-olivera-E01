@@ -1,0 +1,139 @@
+﻿@page "/books/form-with-homebrew-validation"
+@using Models
+
+<h3>BookFormWithHomebrewValidation</h3>
+
+@if (feedbackMessage is not null)
+{
+    <div class="alert alert-info">
+        @feedbackMessage
+    </div>
+}
+
+<EditForm EditContext="@editContext" OnValidSubmit="@AddBook">
+    
+    <ValidationSummary />
+
+    <div>
+        <label for="title" class="form-label">Title:</label>
+        <InputText id="title" @bind-Value="book.Title" class="form-control" />
+        <ValidationMessage For="() => book.Title" />
+    </div>
+
+    <div>
+        <label for="pages" class="form-label">Pages:</label>
+        <InputNumber id="pages" @bind-Value="book.Pages" class="form-control" />
+        <ValidationMessage For="() => book.Pages" />
+    </div>
+
+    <div>
+        <label for="date" class="form-label">Date:</label>
+        <InputDate id="date" @bind-Value="book.PublishDate" class="form-control" />
+        <ValidationMessage For="() => book.PublishDate" />
+    </div>
+
+    <div>
+        <label for="genre" class="form-label">Genre:</label>
+        <InputSelect id="genre" @bind-Value="book.Genre" class="form-control">
+            <option></option> @* you can use an empty first option just so it's a blank value to start with *@
+            <option>Fiction</option>
+            <option>Non-Fiction</option>
+            <option>Sports</option>
+            <option>Cooking</option>
+        </InputSelect>
+        <ValidationMessage For="() => book.Genre" />
+    </div>
+
+    <div>
+        <label>
+            <InputCheckbox @bind-Value="@book.InStock" />
+            In Stock
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Book</button>
+
+</EditForm>
+
+
+
+@code {
+
+    BookWithoutDataAnnotations book = new();
+
+    private string? feedbackMessage;
+
+    // we'll be using these two objects to manually handle & pass up error messages
+    private EditContext editContext = default!;
+    private ValidationMessageStore? messageStore;
+
+    // we're going to override the framework function that runs on page load to initialise our manual error handling
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(book);
+        messageStore = new ValidationMessageStore(editContext);
+    }
+
+    // we're going to do all our manual validation in here
+    private void AddBook()
+    {
+
+        // 0. since we're manually managing a 'store' of error messages/instances, clear it for the new instance
+        //      -> we're using the 'dammit' operator to tell the compiler to ignore nullability warnings on messageStore,
+        //      -> since we know that once the page is initialised, a hydrated instance of it will occur
+        messageStore!.Clear();
+
+        // 1. for Title, required & must be 2-50 characters
+        //      -> pattern when adding to messageStore: () => instance.Property, "error message to display"
+        if (string.IsNullOrWhiteSpace(book.Title))
+        {
+            messageStore!.Add(() => book.Title, "Title is required");
+        }
+        else if (book.Title.Length < 2 || book.Title.Length > 50)
+        {
+            messageStore!.Add(() => book.Title, "Title must be between 2-50 characters");
+        }
+
+        // 2. For pages, we want >= 2 pages
+        if (book.Pages <= 1)
+        {
+            messageStore!.Add(() => book.Pages, "Book must have at least 2 or more pages");
+        }
+
+        // 3. PublishDate must be in the past
+        if (book.PublishDate > DateOnly.FromDateTime(DateTime.Now))
+        {
+            messageStore!.Add(() => book.PublishDate, "Publishing Date must be in the past.");
+        }
+
+        // 4. Genre can't be blank
+        if (string.IsNullOrWhiteSpace(book.Genre))
+        {
+            messageStore!.Add(() => book.Genre, "A genre must be selected");
+        }
+
+        // 5. You have to do a little manual work: getting the editContext to check if state has changed
+        //    -> this will evaluate the validity of current form inputs
+        editContext.NotifyValidationStateChanged();
+
+        // 6. we check if there are any validation messages in the message store, and if not, save the file!
+        if (!editContext.GetValidationMessages().Any()) // basically checking if our validation error message container is empty
+        {
+            // 7. save the book instance to a CSV!
+            string csvPath = Path.Combine(
+                Environment.CurrentDirectory + @"\Data", "books.csv" // (directoryPath, fileName)
+            );
+            File.AppendAllText(csvPath, book.ToCsv()); // don't forget a newline ("\n) - ours is baked into book.ToCsv()
+            feedbackMessage = $"Successfully saved book {book.Title} to:\n{csvPath}";
+
+            // 8. finally, !!! clear the form/instance after submission so you get a fresh, blank form
+            book = new();
+        }
+        else
+        {
+            feedbackMessage = "Please fix the validation issues first.";
+        }
+    }
+
+
+}
