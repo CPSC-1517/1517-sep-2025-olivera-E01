@@ -71,6 +71,9 @@ else
         @* specify the CSV file path *@
         string dataDir = Path.Combine(WebHostEnvironment.ContentRootPath, "Data");
         string csvPath = Path.Combine(dataDir, "books.csv");
+        // string csvPath = Path.Combine(dataDir, "bad-data-books.csv");
+        // string csvPath = Path.Combine(dataDir, "empty-books.csv");
+
 
         @* parse CSV lines into a string (will need a new method on datamodel class) *@
         string[] lines = File.ReadAllLines(csvPath);
