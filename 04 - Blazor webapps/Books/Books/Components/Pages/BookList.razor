@@ -1,0 +1,24 @@
+﻿@page "/books"
+@using Models
+
+@inject IWebHostEnvironment WebHostEnvironment  
+@* ^ gives us access to the webroot directory, i.e. wwwroot *@
+
+
+<h3>Book List</h3>
+
+@* 1. section to display error messages *@
+
+@* 2. table that renders CSV contents into table rows *@
+
+
+@* 3. logic to facilitate loading & rendering CSV contents into table *@
+@code {
+
+    @* 3.a) starter instances *@
+
+    @* 3.b) override our OnInitialized method to load CSV contents
+            and do some basic error handling
+    *@
+
+}
