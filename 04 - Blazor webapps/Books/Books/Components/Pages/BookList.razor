@@ -75,7 +75,29 @@ else
         @* parse CSV lines into a string (will need a new method on datamodel class) *@
         string[] lines = File.ReadAllLines(csvPath);
 
-            @* within that, do some manual validation / error message display *@
+        if (lines.Length > 0)
+        {
+            // create new list of books
+            books = new List<BookWithoutDataAnnotations>();
+
+            // for every line, we're going to check for errors
+            foreach(string currentLine in lines)
+            {
+                try
+                {
+                    BookWithoutDataAnnotations currentBook = new(); // !!! <-- we're going to need some sort of way of parsing the CSV line and instantiating a book instance !!!
+                    books.Add(currentBook);
+                }
+                catch(Exception ex)
+                {
+                    
+                }
+                @* within that, do some manual validation / error message display *@
+
+            }
+
+
+        }
 
     }
 
