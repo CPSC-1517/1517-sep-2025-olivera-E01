@@ -52,7 +52,7 @@ public partial class WestWindContext : DbContext
 
         modelBuilder.Entity<BuildVersion>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BuildVer__3214EC07AAAEEBE3");
+            entity.HasKey(e => e.Id).HasName("PK__BuildVer__3214EC07862EA8B3");
 
             entity.Property(e => e.ReleaseDate).HasDefaultValueSql("(getdate())");
         });
@@ -100,7 +100,7 @@ public partial class WestWindContext : DbContext
 
         modelBuilder.Entity<ManifestItem>(entity =>
         {
-            entity.HasKey(e => e.ManifestItemID).HasName("PK__Manifest__9000192C704F3F8E");
+            entity.HasKey(e => e.ManifestItemID).HasName("PK__Manifest__9000192C6E5C0FB2");
 
             entity.HasOne(d => d.Product).WithMany(p => p.ManifestItems)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -196,7 +196,7 @@ public partial class WestWindContext : DbContext
 
         modelBuilder.Entity<Shipment>(entity =>
         {
-            entity.HasKey(e => e.ShipmentID).HasName("PK__Shipment__5CAD378DAD276802");
+            entity.HasKey(e => e.ShipmentID).HasName("PK__Shipment__5CAD378D9745A494");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Shipments)
                 .OnDelete(DeleteBehavior.ClientSetNull)
