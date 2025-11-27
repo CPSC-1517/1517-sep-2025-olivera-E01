@@ -6,9 +6,19 @@
 @using WestWindSystem.BLL;
 @using WestWindSystem.Entities;
 
+<!--
+
+Additional package setup
+
+you will need to add the NuGet package Blazor.BootStrap by vikram reddy (do first)
+you will need to add a using statement-->
+@using BlazorBootstrap;
 
 <h1>Shipment Query</h1>
 <cite>... tabular report using database data</cite>
+
+<br />
+
 
 
 @if (feedBackMsg.Length > 0)
@@ -34,14 +44,11 @@
 
 <div class="row">
     <div class="col-md-3">
-        <br />
-        <p><b>Hint: Use 2016 as the year!</b></p>
-        <p>Or, in SQL Server Management Studio, right click the table -> "Select top 1000 rows" to see what instances you have.</p>
         <p><strong>Input query values</strong></p>
         <label for="year">Enter a year:</label>&nbsp;&nbsp;
         <input id="year" type="number" style="width:100px;"
                @bind="yeararg" />
-        <br /><br />
+        <br/><br/>
         <label for="month">Enter a month:</label>&nbsp;&nbsp;
         <input id="month" type="number" style="width:100px;"
                @bind="montharg" />
@@ -62,6 +69,24 @@
         }
         else
         {
+
+            //the shipment record has a field called ShipVia which is foreign key (1, 2, 3, etc)
+            //displaying that is meaningless to someone reading the data unless they were familiar with
+            //      the pkey value associated with each company
+            //solution: display the company name
+            //Problem: the name is in a different table
+
+            //If you look at the entities, records with fields used in sql scheme relationships
+            //      have virtual navigational properties (see bottom of entity)
+            //These properties allow you to have access to data in the related table
+
+            //How to use
+
+            //When you use the property just treat it as the name of an object so accessing the
+            //      desired field in the related table just needs the dot (.) operator
+            //In this example, the property is ShipViaNavigation which points to the Shippers table
+            //      and the desired field from the Shippers table was CompanyName
+
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -73,18 +98,50 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in shipmentInfo)
+                    @foreach(var item in shipmentInfo)
                     {
                         <tr>
                             <td>@item.ShipmentID</td>
                             <td>@item.OrderID</td>
-                            <td>@item.ShippedDate.ToString()</td>
-                            <td>@item.ShipVia</td>
-                            <td align="right">@(string.Format("{0:#,##0.00}", item.FreightCharge))</td>
+                            <td>@item.ShippedDate.ToString("MMM dd,yyyy")</td>
+                            @* <td>@item.ShipVia</td> *@
+                            <td>@item.ShipViaNavigation.CompanyName</td>
+                            <td align="right">@(string.Format("{0:#,##0.00}",item.FreightCharge))</td>
                         </tr>
                     }
                 </tbody>
             </table>
+
+            //table
+            //to reduce the number of data rows being displayed there are two techniques
+            //a) pagination
+            //b) scrolling
+
+            //this example uses the Bootstrap Pagination tag:
+            //Required
+            //      total records possibly returned: totalItems
+            //      total required pages depending on totalItems: GetTotalPage()
+            //      current page number: currentPageNumber
+            //      items per page: itemsPerPage
+            //      collection to hold records that will be displayed
+
+            <!--
+            this tag will display 5 page numbers at a time
+            it contains the usual First Previous page numbers Next Last layout
+            HOWEVER, it does not adjust the page numbers to have a continuous
+                   display of pages like  4 5 6 7 8
+            instead it is 1 2 3 4 5 then 6 7 8 9 10 then 11 12 ..
+            but if you look at the first/last number there is a small space
+              near the top of the display that is empty and can be clicked
+              as if it is the expected ... normally displayed
+
+            remember this control tag is TOTALLY independent of the table
+            -->
+            <Pagination ActivePageNumber="currentPageNumber"
+                        TotalPages="GetTotalPages()"
+                        PageChanged="OnPageChanged">
+            </Pagination>
+
         }
 
     </div>
@@ -92,20 +149,27 @@
 
 
 @code {
+
+    //user messages and feedback
     private string feedBackMsg = "";
     private List<String> errorMsgs = new();
 
+    //bind variables and collections
     private int yeararg = 0;
     private int montharg = 0;
-
     private List<Shipment> shipmentInfo = null;
     private List<Shipper> shipperInfo = null;
 
+    //injection services
     [Inject]
     public ShipmentServices _shipmentServices { get; set; }
     [Inject]
     public ShipperServices _shipperServices { get; set; }
 
+    //pagination variables
+    private int currentPageNumber = 0; //tracks the current page to display
+    private int itemsPerPage = 5; //developer decision
+    private int totalItems = 0;   //total number of row for the query
 
     protected override void OnInitialized()
     {
@@ -128,8 +192,15 @@
 
     private void GetShipments()
     {
+        //clear old messages and collections
         feedBackMsg = "";
         errorMsgs.Clear();
+        if (shipmentInfo != null)
+            shipmentInfo.Clear();
+
+        //on a new query, one should start on the first page
+        //reset the current page number to 1
+        currentPageNumber = 1;
 
         if (yeararg < 1950 || yeararg > DateTime.Today.Year)
         {
@@ -146,10 +217,29 @@
             try
             {
                 //consume the service (go get the data)
-                shipmentInfo = _shipmentServices.Shipment_GetByYearandMonth(yeararg, montharg);
+                //this is the query to use IF you plan to use scrolling on your present
+                //this query will return all the rows
+                //shipmentInfo = _shipmentServices.Shipment_GetByYearandMonth(yeararg, montharg);
+
+                //logic for pagination
+                //need to call a service for
+                //    get the total number of records from on the database
+                //    this does NOT return the actual records
+                totalItems = _shipmentServices.Shipment_GetByYearandMonthCount(yeararg, montharg);
+
+                //    get only the number of records needed to display on the current page
+                //          which is the first page for the query parameters
+
+                //obtaining your query content when using paging
+                //2 additional argument values need to be included
+                //  a) the currentPageNumber
+                //  b) the items per page
+                //this query call will return ONLY the rows to be displayed for the indicated page (currentPageNumber)
+                shipmentInfo = _shipmentServices.Shipment_GetByYearandMonthPaging(yeararg, montharg,
+                                                                        currentPageNumber, itemsPerPage);
 
             }
-            catch (ArgumentException ex)
+            catch(ArgumentException ex)
             {
                 errorMsgs.Add($"Data value error: {ex.Message}");
             }
@@ -158,5 +248,35 @@
                 errorMsgs.Add($"system error: {ex.Message}");
             }
         }
+    }
+
+    private int GetTotalPages()
+    {
+        //calculation needed on each query
+
+        //totalitems is obtained by a query
+        //itemsPerPage was a developer decision
+        return (totalItems + itemsPerPage - 1) / itemsPerPage;
+
+    }
+
+    //will execute when you change the page on the  browser by
+    //  clicking on a new page number
+    //this event is called by the Pagination control, you DO NOT directly call this method
+    private void OnPageChanged(int newPageNumber)
+    {
+        //the incoming value for your parameter will be supplied by the Pagination control
+        //remember to update the current page number to the newly selected page number
+        currentPageNumber = newPageNumber;
+
+        //retrieve the "page" by requerying your service against the database
+        //parameters required
+        //  query value parameter(s)
+        //  itemPerPage
+        //  currentPageNumber
+
+        //REMEMBER: the query returns ONLY the rows for the current page.
+        shipmentInfo = _shipmentServices.Shipment_GetByYearandMonthPaging(yeararg, montharg,
+                                                                       currentPageNumber, itemsPerPage);
     }
 }
