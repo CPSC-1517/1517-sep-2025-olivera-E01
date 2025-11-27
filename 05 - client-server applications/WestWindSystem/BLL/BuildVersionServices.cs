@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WestWindSystem.DAL;
-using WestWindSystem.Entities;
 
 #region Additional Namespaces
 using WestWindSystem.DAL;
