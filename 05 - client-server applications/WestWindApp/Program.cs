@@ -27,6 +27,9 @@ builder.Services.WestWindExtensionServices(options => options.UseSqlServer(conne
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Add third-party services to the container.
+builder.Services.AddBlazorBootstrap();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
