@@ -1,0 +1,257 @@
+﻿@page "/productcrud"﻿
+<PageTitle>Product CRUD</PageTitle>
+@rendermode InteractiveServer
+
+<!-- Additional namespaces-->
+@using WestWindSystem.BLL;
+@using WestWindSystem.Entities;
+
+<h1>Product CRUD</h1>
+<cite> ... demonstrating CRUD using EditForm</cite>
+
+<br />
+<br />
+
+@if (feedBackMsg.Length > 0)
+{
+    <div class="alert alert-info">
+        <p>@feedBackMsg</p>
+    </div>
+}
+
+@if (errorMsgs.Count > 0)
+{
+    <div class="alert alert-danger">
+        <p>Please fix the following issues:</p>
+        <ul>
+            @foreach (var error in errorMsgs)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+
+<br />
+<br />
+<!-- EditForm
+
+You've used EditForms before! Now we're using them again, to *write* objects.
+
+-->
+
+<EditForm EditContext="editContext">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+
+
+    <div class="row">
+        <div class="offset-1 col-md-4">
+            <label for="productid" class="form-label">Product ID</label>
+
+            <!--
+                When using an EditForm, we use Blazor's component-based input fields.
+
+                When creating an instance, *do not* let the user decide the primary key!
+                 -> i.e., do not let the user decide/input whichever property is the PK.
+                    Here, that's the ProductID.
+
+                A simple way of doing that on the front-end is giving the input a readonly attribute,
+                just to make it conventionally inaccessible by the user.
+
+                This is not enough in itself though, because a user could just remove the readonly
+                tag via developer console in their browser. It's just a visual/interactive barrier.
+            -->
+            <InputNumber id="productid" class="form-control"
+                        @bind-Value="currentProduct.ProductID"
+                        style="width: 75px;" readonly />
+            <br/>
+            <label for="productname" class="form-label">Name</label>
+            <InputText id="productname" class="form-control"
+                        @bind-Value="currentProduct.ProductName" />
+            <ValidationMessage For="@(() => currentProduct.ProductName)" />
+
+            <!-- Foreign Keys-->
+            <!--
+                The Product has a Category foreignkey.
+                We loop from available choices in db instances, so the only possible values
+                are valid options from the actual data backend.
+
+                You've already done this too - looping through a query result to generate
+                <option>s inside a <select>.
+
+            -->
+            <br />
+            <label for="categoryid" class="form-label">Category</label>
+            <InputSelect id="categoryid" @bind-Value="currentProduct.CategoryID" class="form-control">
+                <option value="0">... select category ...</option>
+                @foreach(var item in categoryList)
+                {
+                    <option value="@item.CategoryID">@item.CategoryName</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => currentProduct.CategoryID)" />
+
+            <br />
+
+            <label for="supplierid" class="form-label">Supplier</label>
+            <InputSelect id="supplierid" @bind-Value="currentProduct.SupplierID" class="form-control">
+                <option value="0">... select supplier ...</option>
+                @foreach (var item in supplierList)
+                {
+                    <option value="@item.SupplierID">@item.CompanyName</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => currentProduct.SupplierID)" />
+
+
+        </div>
+   
+        <!-- Yep... we have to include inputs for every user-settable property on the class. 
+        -->
+        <div class="offset-1 col-md-4">
+            <label for="qtyperunit" class="form-label">Qty / Unit</label>
+            <InputText id="qtyperunit" class="form-control"
+                       @bind-Value="currentProduct.QuantityPerUnit" />
+            <ValidationMessage For="@(() => currentProduct.QuantityPerUnit)" />
+            <br/>
+            <label for="minqty" class="form-label">Min Order Qty</label>
+            <InputNumber id="minqty" class="form-control"
+                       @bind-Value="currentProduct.MinimumOrderQuantity" />
+            <ValidationMessage For="@(() => currentProduct.MinimumOrderQuantity)" />
+            <br />
+            <label for="unitprice" class="form-label">Unit Price</label>
+            <InputNumber id="unitprice" class="form-control"
+                         @bind-Value="currentProduct.UnitPrice" />
+            <ValidationMessage For="@(() => currentProduct.UnitPrice)" />
+            <br />
+            <label for="unitsonorder" class="form-label">Units on Order</label>
+            <InputNumber id="unitsonorder" class="form-control"
+                         @bind-Value="currentProduct.UnitsOnOrder" />
+            <ValidationMessage For="@(() => currentProduct.UnitsOnOrder)" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <button type="button" class="btn btn-outline-primary rounded-pill"
+                    @onclick="OnCreate" style="width:160px;">
+                Create    
+            </button>
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-outline-secondary rounded-pill"
+                    @onclick="OnClear" style="width:160px;">
+                Clear
+            </button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private string feedBackMsg = "";
+    private List<string> errorMsgs = new();
+
+
+
+    //  In an implementation where we're not just binding to a model, editContext holds
+    //  the input data we're generating for the new instance we want to create.
+    private EditContext editContext;
+
+    //  Here's our error message container.
+    private ValidationMessageStore validationMessageStore;
+
+    // Here's a product instance that starts empty.
+    private Product currentProduct = new();
+
+    // Because we're allowing foreignkey properties to be set, we inject the query service
+    // for that foreignkey object.
+    [Inject]
+    public CategoryServices _categoryServices { get; set; }
+    private List<Category> categoryList = new();
+
+    [Inject]
+    public SupplierServices _supplierServices { get; set; }
+    private List<Supplier> supplierList = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        // create & associate instances
+        editContext = new EditContext(currentProduct);
+        validationMessageStore = new ValidationMessageStore(editContext);
+
+        // fill the foreignkey input field collections via query methods from service layer (BLL)
+        categoryList = _categoryServices.Category_GetAll();
+        supplierList = _supplierServices.Supplier_GetAll();
+
+    }
+
+    private void OnCreate()
+    {
+        // You've seen this all before!
+        feedBackMsg = "";
+        errorMsgs.Clear();
+        validationMessageStore.Clear();
+
+        try
+        {
+            // try-catch to collect input errors (and trigger error message display),
+            // and only allow the object to be written to db if there are no errors.
+            if (editContext.Validate())
+            {
+                if (currentProduct.CategoryID == 0)  // foreignkey PK values can't be zero
+                {
+                    validationMessageStore.Add(editContext.Field(nameof(currentProduct.CategoryID)),
+                                                "You must select a category");
+                }
+                if (currentProduct.SupplierID == 0)
+                {
+                    validationMessageStore.Add(editContext.Field(nameof(currentProduct.SupplierID)),
+                                            "You must select a supplier");
+                }
+                if (currentProduct.UnitPrice < 0.0m)
+                {
+                    validationMessageStore.Add(editContext.Field(nameof(currentProduct.UnitPrice)),
+                                           "Unit price must be zero or greater.");
+                }
+
+                // trigger error messages if we had any issues
+                if (editContext.GetValidationMessages().Any())
+                {
+                    editContext.NotifyValidationStateChanged();
+                }
+                else
+                {
+
+                    int newProductId = 0;
+                    // writing the new instance via creation method we wrote in the service layer:
+                    //int newProductId = _productServices.Product_Add(currentProduct);
+
+                    feedBackMsg = $"Product {currentProduct.ProductName} (ID: {newProductId}) has been added to database.";
+                }
+
+            }
+        }
+        catch (Exception ex)
+        {
+            feedBackMsg = $"System Error: {ex.Message}";
+        }
+
+    }
+    private void OnClear()
+    {
+        // generic behaviour for clearing out the form
+        feedBackMsg = "";
+        errorMsgs.Clear();
+
+        validationMessageStore.Clear();
+
+        currentProduct = new Product();
+        // currentProduct.ProductName = "unknown";
+        // currentProduct.QuantityPerUnit = "unknown";
+
+        // We *must* create a new EditContext instance for the next addition
+        editContext = new EditContext(currentProduct);
+    }
+}
