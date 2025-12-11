@@ -145,6 +145,10 @@ You've used EditForms before! Now we're using them again, to *write* objects.
                     @onclick="OnClear" style="width:160px;">
                 Clear
             </button>
+            <button type="button" class="btn btn-outline-primary rounded-pill"
+                    @onclick="OnUpdate" style="width:160px;">
+                Update
+            </button>
         </div>
     </div>
 </EditForm>
@@ -243,6 +247,68 @@ You've used EditForms before! Now we're using them again, to *write* objects.
         }
 
     }
+
+    // A better design pattern, if create/update validation were identical, would be having
+    // a shared method called in OnCreate / OnUpdate that does that work first.
+    // Then, if you had any validation changes you'd want to make, you'd only have to implement them once!
+    // In this example, we're writing everything out in full.
+    private void OnUpdate()
+    {
+        //clear old messages
+        feedBackMsg = "";
+        errorMsgs.Clear();
+        validationMessageStore.Clear();
+
+        try
+        {
+            if (editContext.Validate())
+            {
+                if (currentProduct.CategoryID == 0)
+                {
+                    validationMessageStore.Add(editContext.Field(nameof(currentProduct.CategoryID)),
+                                                "You must select a category");
+                }
+                if (currentProduct.SupplierID == 0)
+                {
+                    validationMessageStore.Add(editContext.Field(nameof(currentProduct.SupplierID)),
+                                            "You must select a supplier");
+                }
+                if (currentProduct.UnitPrice < 0.0m)
+                {
+                    validationMessageStore.Add(editContext.Field(nameof(currentProduct.UnitPrice)),
+                                           "Unit price must be zero or greater.");
+                }
+                if (editContext.GetValidationMessages().Any())
+                {
+                    //notify the editcontext that there has been a change to the message store
+                    editContext.NotifyValidationStateChanged();
+                }
+                else
+                {
+                    int rowsaffected = _productServices.Product_Update(currentProduct);
+
+                    //Question: DID you ACTUALLY change any records?
+                    //situation: an update was attempted but no records on the database were
+                    //              actually change AND the action did NOT abort
+                    //in this case rowsafftected = 0
+
+                    if (rowsaffected == 0)
+                    {
+                        feedBackMsg = $"Product {currentProduct.ProductName} (ID: {currentProduct.ProductID}) change failed.";
+                    }
+                    else
+                    {
+                        feedBackMsg = $"Product {currentProduct.ProductName} (ID: {currentProduct.ProductID}) change were saved.";
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            feedBackMsg = $"System Error: {ex.Message}";
+        }
+    }
+
     private void OnClear()
     {
         // generic behaviour for clearing out the form
