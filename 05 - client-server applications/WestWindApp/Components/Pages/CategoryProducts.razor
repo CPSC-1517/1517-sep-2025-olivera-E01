@@ -41,9 +41,21 @@
             }
         </select>
         &nbsp;&nbsp;
+        @* Here, we're demoing two different ways of doing routing:
+            1. Blazor NavLink component
+            2. NavigationManager & method handler
+        *@
+        <button type="submit" class="btn btn-outline-secondary rounded-pill">
+            <NavLink href="productcrud">CRUD via NavLink component</NavLink>
+        </button>
 
-    </div>
+        <button type="submit" class="btn btn-outline-secondary rounded-pill" @onclick="GoToCRUD">
+            CRUD via event
+        </button>
+     </div>
 </div>
+
+
 
 @code {
 
@@ -68,6 +80,10 @@
     private SupplierServices _supplierServices { get; set; }
     private List<Supplier> supplierList { get; set; }
 
+    //inject NavigationManager to handle our event-based link routing
+    [Inject]
+    private NavigationManager _navManager { get; set; }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -76,6 +92,11 @@
         //retrieve the list of supplier via the SupplierServices in your BLL
         supplierList = _supplierServices.Supplier_GetAll();
 
+    }
+
+    private void GoToCRUD()
+    {
+        _navManager.NavigateTo("/productcrud");
     }
 
 }
