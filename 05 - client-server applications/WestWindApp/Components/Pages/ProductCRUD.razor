@@ -125,7 +125,7 @@ You've used EditForms before! Now we're using them again, to *write* objects.
             <br />
             <label for="unitprice" class="form-label">Unit Price</label>
             <InputNumber id="unitprice" class="form-control"
-                         @bind-Value="currentProduct.UnitPrice" />
+                         @bind-Value="FormatUnitPrice" />
             <ValidationMessage For="@(() => currentProduct.UnitPrice)" />
             <br />
             <label for="unitsonorder" class="form-label">Units on Order</label>
@@ -194,6 +194,12 @@ You've used EditForms before! Now we're using them again, to *write* objects.
     // A Parameter becomes a property of the component (i.e. this page, e.g. ProductCRUD.productid)
     [Parameter]
     public int? productid { get; set; }
+
+    private decimal FormatUnitPrice
+    {
+        get { return Math.Round(currentProduct.UnitPrice, 2); } // return a decimal rounded to 2 places
+        set { currentProduct.UnitPrice = value;  }
+    }
 
     protected override void OnInitialized()
     {
