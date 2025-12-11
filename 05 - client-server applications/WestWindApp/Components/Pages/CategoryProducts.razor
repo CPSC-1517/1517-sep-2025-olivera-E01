@@ -41,6 +41,11 @@
             }
         </select>
         &nbsp;&nbsp;
+        <button type="submit" class="btn btn-outline-primary rounded-pill"
+                @onclick="FetchProducts">
+            Fetch Products
+        </button>
+        &nbsp;&nbsp;
         @* Here, we're demoing two different ways of doing routing:
             1. Blazor NavLink component
             2. NavigationManager & method handler
@@ -48,11 +53,68 @@
         <button type="submit" class="btn btn-outline-secondary rounded-pill">
             <NavLink href="productcrud">CRUD via NavLink component</NavLink>
         </button>
-
+        &nbsp;&nbsp; @* Non Blank Space character -> forces a blank space*@
         <button type="submit" class="btn btn-outline-secondary rounded-pill" @onclick="GoToCRUD">
             CRUD via event
         </button>
      </div>
+</div>
+
+<br />
+<br />
+<div class="row">
+    @if (productList != null)
+    {
+        @if (productList.Count > 0)
+        {
+            <div class="offset-2 col-md-8 overflow-scroll" style="height:450px;">
+                <table class="table table-striped">
+                    <thead style="position:sticky; top:0; background-color:white;">
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Product</th>
+                            <th>Unit Size</th>
+                            <th>Company Name</th>
+                            <th>Disc.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Product item in productList)
+                        {
+                            // the link on the display line will send the display to the crud page
+                            // HOWEVER, an important piece of data also needs to be send to the crud page
+                            //          that piece of data is the pkey of the product to display on
+                            //                  the crud
+                            // Solution: The "View" needs to be an anchor tag to be able to transfer
+                            //              the user to the CRUD page
+                            //           we can add that information to the href as a routing parameter
+                            //           the crud page will need to alter its @page directive to capture
+                            //                the routing parameter
+                            //           on this page add the parameter value to send with the href
+                            <tr>
+                                <td><a href="productcrud/@item.ProductID">View</a></td>
+                                <td>@item.ProductName</td>
+                                <td>@item.QuantityPerUnit</td>
+                                <td> @item.Supplier.CompanyName</td>
+                                <td>@(item.Discontinued ? "Yes" : " ")</td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        }
+        else
+        {
+            if (CategoryId > 0)
+            {
+                <div class="offset-3 col-md-6 text-center" style="font-size:48px">
+                    <p>No products for the selected category</p>
+                </div>
+            }
+        }
+    }
+
 </div>
 
 
@@ -92,6 +154,32 @@
         //retrieve the list of supplier via the SupplierServices in your BLL
         supplierList = _supplierServices.Supplier_GetAll();
 
+    }
+
+    private void FetchProducts()
+    {
+        //fetch the list of products depending of the category selection
+        //if no category was selected display a message and clear old product display
+
+        //clear old message and old data presentation
+        feedBackMessage = "";
+        errorMsgs.Clear();
+
+        //due to the way that the product list is handled for the table
+        //  the productlist may be null
+        if (productList != null)
+            productList.Clear();
+
+        //validation
+        if (CategoryId == 0)
+        {
+            //is it an error OR do I need to inform the user that they need to do a simply action
+            feedBackMessage = "You need to select a category to view its products";
+        }
+        else
+        {
+            productList = _productServices.Product_GetByCategoryID(CategoryId);
+        }
     }
 
     private void GoToCRUD()
