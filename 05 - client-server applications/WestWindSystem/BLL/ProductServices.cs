@@ -27,6 +27,25 @@ namespace WestWindSystem.BLL
         #endregion
 
 
+        // set up product queries in anticipation of a search page
+        #region Queries
+        public List<Product> Product_GetByCategoryID(int categoryid)
+        {
+            IEnumerable<Product> info = _context.Products
+                                        .Where(x => x.CategoryID == categoryid)
+                                        .OrderBy(x => x.ProductName);
+            return info.ToList();
+        }
+
+        public Product Product_GetByID(int productid)
+        {
+            Product info = _context.Products
+                                .FirstOrDefault(x => x.ProductID == productid);
+            return info;
+        }
+        #endregion
+
+
 
 
         #region CRUD (Add, Update and Delete)
@@ -93,6 +112,174 @@ namespace WestWindSystem.BLL
             // especially because it provides 'proof' that the operation was successful.
 
             return item.ProductID;
+        }
+
+
+        public int Product_Update(Product item)
+        {
+            //was data passed in
+            if (item == null)
+            {
+                throw new ArgumentNullException("Product information was not submitted.");
+            }
+
+            //does the pkey exist?
+            if (!_context.Products.Any(x => x.ProductID == item.ProductID))
+            {
+                throw new ArgumentException($"{item.ProductName}  of size " +
+                                            $"{item.QuantityPerUnit}is not on file. " +
+                                            "Check for the product again.");
+            }
+
+            bool exists = false;
+            exists = _context.Products
+                            .Any(x => x.SupplierID == item.SupplierID
+                                    && x.ProductName.Equals(item.ProductName)
+                                    && x.QuantityPerUnit == item.QuantityPerUnit
+                                    && x.ProductID != item.ProductID);
+            if (exists)
+                throw new ArgumentException($"{item.ProductName} from " +
+                                            $"{item.Supplier.CompanyName} of size " +
+                                            $"{item.QuantityPerUnit} already on file.");
+
+
+
+            // 'stage' changes
+            EntityEntry<Product> updating = _context.Entry(item);
+            updating.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+            // 'commit' themn
+            return _context.SaveChanges(); //if successful, return row affected count
+
+        }
+
+
+        //Delete: cruD
+        //there are two types of deletes: physical and logical
+        //Whether you have a physical or logical delete is determined WHEN
+        //  the system is designed (database, data requirements)
+
+
+
+        //Logical delete
+        //this happens when the records is deemed "unwanted" BUT CANNOT be 
+        //  physically removed from the database because the records has
+        //  a relationship to another records (parent/child) and the associated record
+        //  CANNOT be removed
+
+
+
+        //Example: The product record is a parent to ManitfestItems records
+        //         The manifest record is need for tracking, it goes to the receiver of the product
+        //so, because the other record(s) are required for the business
+        //      one CANNOT physically remove the ("parent") product record.
+
+
+
+        //usually in this situation, the parent record (product) will have some type of field
+        //  that will indicate "deleted"
+        //on the product record such a field is the Discontinued field
+
+
+
+        //Question: If the record will not be deleted, what happens?
+        //Answer: here, you will actually do an update
+        //Within the method, it is a good practice NOT to rely on the user to set
+        //  the "logical delete" field to the delete status
+        //Your method should set the value
+
+        public int Product_LogicalDelete(Product item)
+        {
+            //was data passed in
+            if (item == null)
+            {
+                throw new ArgumentNullException("Product information was not submitted.");
+            }
+
+            //does the pkey exist?
+            //here we will want the actual db record so that it can be altered BEFORE staging
+            //we do not want to use the incoming record.
+            Product exists = null;
+            exists = _context.Products
+                                .FirstOrDefault(x => x.ProductID == item.ProductID);
+
+            if (exists == null)
+            {
+                throw new ArgumentException($"{item.ProductName}  of size " +
+                                            $"{item.QuantityPerUnit} is not on file. " +
+                                            "Check for the product again.");
+            }
+
+            //for the logical delete
+            //  set the appropriate field to the value indicating "delete"
+            //this code is not relying on the user to have set the appropriate
+            //  field on the form
+            //note: no OTHER field on the current record is altered
+            exists.Discontinued = true;
+
+            //Staging
+            EntityEntry<Product> updating = _context.Entry(item);
+            updating.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+            //Commit
+            return _context.SaveChanges(); //if successful, return row affected count
+        }
+
+        //Physical Delete
+        //you physically remove the record from the database
+        //IF there are no "child" records to prevent the record removal, you can remove the record
+        //IF there are "children" AND the "children" are not required, you can remove the record
+        //      HOWEVER, you will need to first remove any "children" before removing the parent record
+        //      assuming there is no cascade delete setup on the database
+
+        public int Product_PhysicalDelete(Product item)
+        {
+            //was data passed in
+            if (item == null)
+            {
+                throw new ArgumentNullException("Product information was not submitted.");
+            }
+
+            //does the pkey exist?
+            if (!_context.Products.Any(x => x.ProductID == item.ProductID))
+            {
+                throw new ArgumentException($"{item.ProductName}  of size " +
+                                            $"{item.QuantityPerUnit}is not on file. " +
+                                            "Check for the product again.");
+            }
+
+            //this delete assumes that there is no appropriate field on the 
+            //  record to indicate a logical "delete" and thus: a physical
+            //  delete will occur
+
+            //HOWEVER!! this record could be a parent to one or more "child" records
+            //One should ensure that there is no existing child record for the
+            //  parent BEFORE attempting the delete
+
+
+            //using the virtual navigational properties, one could check to see
+            //  if any child records (collection) exists for the parent
+            //if there is a cascade delete setup on your dataset and is allowed
+            //  then these checks are unnecessary
+
+            if (_context.Products.Any(x => x.ManifestItems.Count > 0))
+            {
+                throw new ArgumentException($"{item.ProductName}  of size " +
+                                            $"{item.QuantityPerUnit} has Manifest records on file. Unable to delete.");
+            }
+
+            if (_context.Products.Any(x => x.OrderDetails.Count > 0))
+            {
+                throw new ArgumentException($"{item.ProductName}  of size " +
+                                            $"{item.QuantityPerUnit} has Order detail records on file. Unable to delete.");
+            }
+
+            //Staging
+            EntityEntry<Product> deleting = _context.Entry(item);
+            deleting.State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+
+            //Commit
+            return _context.SaveChanges(); //if successful, return row affected count
         }
 
         #endregion
