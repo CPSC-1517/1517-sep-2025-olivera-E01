@@ -152,6 +152,10 @@ You've used EditForms before! Now we're using them again, to *write* objects.
                     @onclick="OnUpdate" style="width:160px;">
                 Update
             </button>
+            <button type="button" class="btn btn-outline-primary rounded-pill"
+                    @onclick="OnDiscontinued" style="width:160px;">
+                Discontinue
+            </button>
         </div>
     </div>
 </EditForm>
@@ -316,6 +320,72 @@ You've used EditForms before! Now we're using them again, to *write* objects.
                     else
                     {
                         feedBackMsg = $"Product {currentProduct.ProductName} (ID: {currentProduct.ProductID}) change were saved.";
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            feedBackMsg = $"System Error: {ex.Message}";
+        }
+    }
+
+    private void OnDiscontinued()
+    {
+        //clear old messages
+        feedBackMsg = "";
+        errorMsgs.Clear();
+        validationMessageStore.Clear();
+
+        try
+        {
+            //the custom validation is dependent on how you manage your
+            //  product service method
+            //a) if you are NOT going to use the incoming data to update
+            //   your product before setting the Discontinued field to true
+            //   then you do NOT need to do this custom validation
+            //OR
+            //b) you are going to allow update and discontinue to happen on
+            //      the discontinue THEN you DO need to do this custom validation
+            if (editContext.Validate())
+            {
+                if (currentProduct.CategoryID == 0)
+                {
+                    validationMessageStore.Add(editContext.Field(nameof(currentProduct.CategoryID)),
+                                                "You must select a category");
+                }
+                if (currentProduct.SupplierID == 0)
+                {
+                    validationMessageStore.Add(editContext.Field(nameof(currentProduct.SupplierID)),
+                                            "You must select a supplier");
+                }
+                if (currentProduct.UnitPrice < 0.0m)
+                {
+                    validationMessageStore.Add(editContext.Field(nameof(currentProduct.UnitPrice)),
+                                           "Unit price must be zero or greater.");
+                }
+                if (editContext.GetValidationMessages().Any())
+                {
+                    //notify the editcontext that there has been a change to the message store
+                    editContext.NotifyValidationStateChanged();
+                }
+                else
+                {
+                    // if you wanted to do a physical delete, i.e. wipe it from the DB,
+                    // you may as well skip all the validation above, and call
+                    // _productServices.Product_PhysicalDelete(currentProduct) instead
+                    int rowsaffected = _productServices.Product_LogicalDelete(currentProduct);
+
+                    //Question: DID you ACTUALLY change any records?
+
+
+                    if (rowsaffected == 0)
+                    {
+                        feedBackMsg = $"Product {currentProduct.ProductName} (ID: {currentProduct.ProductID}) discontinue failed.";
+                    }
+                    else
+                    {
+                        feedBackMsg = $"Product {currentProduct.ProductName} (ID: {currentProduct.ProductID}) has been disconntinued.";
                     }
                 }
             }
