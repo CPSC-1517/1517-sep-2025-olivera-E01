@@ -210,12 +210,10 @@ namespace WestWindSystem.BLL
                                             "Check for the product again.");
             }
 
-            //for the logical delete
-            //  set the appropriate field to the value indicating "delete"
-            //this code is not relying on the user to have set the appropriate
-            //  field on the form
-            //note: no OTHER field on the current record is altered
-            exists.Discontinued = true;
+            // we're using Product.Discontinued to 'take this product out of commission' (logical delete from system behaviour),
+            // rather than 'burning the body' (physiical delete from DB)
+            // Basically, we've implemented a property that lets us take it out of action, and we'll toggle that & then *update* the instance.
+            exists.Discontinued = true;  // (this is a property that already existed on Product, as a design choice, for this type of reason!)
 
             //Staging
             EntityEntry<Product> updating = _context.Entry(item);
