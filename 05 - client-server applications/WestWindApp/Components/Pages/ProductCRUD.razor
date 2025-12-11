@@ -1,4 +1,7 @@
-﻿@page "/productcrud"﻿
+﻿@page "/productcrud/{productid:int?}"﻿
+@* ^ putting a dynamic parameter in the URL allows us to,
+    in this case, land on a form page with that Product's data prepopulated (update page)
+*@
 <PageTitle>Product CRUD</PageTitle>
 @rendermode InteractiveServer
 
@@ -182,9 +185,23 @@ You've used EditForms before! Now we're using them again, to *write* objects.
     [Inject]
     public ProductServices _productServices { get; set; }
 
+    // I'll control access to /productcrud/{int:productID} by reading a variable from the URL
+    // That I'll set here as a parameter.
+    // A Parameter becomes a property of the component (i.e. this page, e.g. ProductCRUD.productid)
+    [Parameter]
+    public int? productid { get; set; }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
+
+        // we're going to use productid (from our URL, stored the int parameter productit)
+        // to try to look up an existing instance from the database.
+        // If we got e.g. /productcrud/17, that implies updating an existing instance (not creating)
+        // so we prepopulate the form with that instance's data! (How else were you planning on *editing* it?)
+        // It makes sense to do this when the page initially loads; that's why the user's here in the first place.
+        if (productid.HasValue)
+            currentProduct = _productServices.Product_GetByID(productid.Value);
 
         // create & associate instances
         editContext = new EditContext(currentProduct);
