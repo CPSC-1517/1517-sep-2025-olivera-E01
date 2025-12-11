@@ -144,17 +144,24 @@ You've used EditForms before! Now we're using them again, to *write* objects.
                 Create    
             </button>
             &nbsp;&nbsp;
-            <button type="button" class="btn btn-outline-secondary rounded-pill"
-                    @onclick="OnClear" style="width:160px;">
-                Clear
-            </button>
             <button type="button" class="btn btn-outline-primary rounded-pill"
                     @onclick="OnUpdate" style="width:160px;">
                 Update
             </button>
+            &nbsp;&nbsp;
             <button type="button" class="btn btn-outline-primary rounded-pill"
                     @onclick="OnDiscontinued" style="width:160px;">
                 Discontinue
+            </button>
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-outline-secondary rounded-pill"
+                    @onclick="OnClear" style="width:160px;">
+                Clear
+            </button>
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-outline-primary rounded-pill"
+                    @onclick="OnSearch" style="width:160px;">
+                Search a product
             </button>
         </div>
     </div>
@@ -191,6 +198,9 @@ You've used EditForms before! Now we're using them again, to *write* objects.
 
     [Inject]
     public IJSRuntime jsRuntime { get; set; }
+
+    [Inject]
+    private NavigationManager _navManager { get; set; }
 
     // I'll control access to /productcrud/{int:productID} by reading a variable from the URL
     // That I'll set here as a parameter.
@@ -419,16 +429,32 @@ You've used EditForms before! Now we're using them again, to *write* objects.
 
         // Trigger a boolean popup (confirm/cancel) and clear only if the user confirms.
         if (await(jsRuntime.InvokeAsync<bool>("confirm",messageString)))
-        
+
             // Move all our original clear behaviour here!
             validationMessageStore.Clear();
 
-            currentProduct = new Product();
-            // currentProduct.ProductName = "unknown";
-            // currentProduct.QuantityPerUnit = "unknown";
+        currentProduct = new Product();
+        // currentProduct.ProductName = "unknown";
+        // currentProduct.QuantityPerUnit = "unknown";
 
-            // We *must* create a new blank EditContext instance for the next addition
-            editContext = new EditContext(currentProduct);   
+        // We *must* create a new blank EditContext instance for the next addition
+        editContext = new EditContext(currentProduct);   
+    }
+
+    private async Task OnSearch()
+    {
+        // clear old feedback 
+        feedBackMsg = "";
+        errorMsgs.Clear();
+
+        // Trigger popup to confirm navigating to search page
+        // NavigationManager, the component we can call for routing to another page,
+        // can take us straight there with a method call to the URL!
+        object[] messageString = new object[]
+            {"Leaving the page will lose all unsaved data. Do you want to continue?"};
+        if (await (jsRuntime.InvokeAsync<bool>("confirm",messageString)))
+        {
+            _navManager.NavigateTo("/categoryproducts");
         }
     }
 }
